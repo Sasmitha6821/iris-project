@@ -1,7 +1,4 @@
 
-git+https://github.com/ageitgey/face_recognition_models
-face_recognition 
-
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-dotenv==1.0.0

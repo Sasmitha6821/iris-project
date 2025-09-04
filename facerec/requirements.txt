@@ -1,15 +1,17 @@
-mediapipe
-opencv-python
-numpy
-fastapi
-uvicorn[standard]
-python-dotenv
-psycopg[binary]
-pydantic
-scikit-learn
-setuptools
-cmake 
-dlib 
+
 git+https://github.com/ageitgey/face_recognition_models
 face_recognition 
 
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-dotenv==1.0.0
+pydantic==2.5.0
+
+# Database
+psycopg[binary]==3.1.13
+supabase==2.2.0
+
+# Basic image processing (lightweight)
+pillow==10.1.0
+numpy==1.24.3
+requests==2.31.0

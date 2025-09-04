@@ -1,5 +1,5 @@
 [providers]
-python = "3.10"
+python = ["3.10"]
 
 [phases.build]
 cmds = ["pip install -r requirements.txt"]

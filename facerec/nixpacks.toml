@@ -9,7 +9,8 @@ onlyIncludeFiles = ["requirements.txt"]
 cmds = [
     "python3 -m venv /opt/venv",
     "/opt/venv/bin/pip install --upgrade pip",
-    "/opt/venv/bin/pip install -r requirements.txt"
+    "echo 'Installing lightweight backend dependencies only...'",
+    "/opt/venv/bin/pip install --no-cache-dir --force-reinstall -r requirements.txt"
 ]
 
 [start]

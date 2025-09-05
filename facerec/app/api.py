@@ -51,7 +51,12 @@ Allow cross-origin requests from local development origins.
 """
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000",
+        "https://iris-project-lac.vercel.app",
+        "https://*.vercel.app"  # Allow all Vercel deployment previews
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

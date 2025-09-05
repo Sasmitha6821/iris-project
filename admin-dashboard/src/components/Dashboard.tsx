@@ -76,10 +76,10 @@ export default function Dashboard(_props: DashboardProps) {
           Where Learning Begins with Being Present
         </Typography>
         <Typography variant="h6" sx={{ opacity: 0.8, fontStyle: 'italic' }}>
-          "Success is the sum of small efforts, repeated day in and day out"
+          &quot;Success is the sum of small efforts, repeated day in and day out&quot;
         </Typography>
         <Typography variant="body1" sx={{ mt: 3, opacity: 0.85, maxWidth: '600px', mx: 'auto' }}>
-          Every student's journey starts with showing up. Track attendance seamlessly,
+          Every student&apos;s journey starts with showing up. Track attendance seamlessly,
           celebrate consistency, and build the foundation for academic excellence through presence and participation.
         </Typography>
       </Paper>

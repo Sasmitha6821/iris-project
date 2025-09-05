@@ -16,3 +16,4 @@ supabase
 pillow
 numpy
 requests 
+python-multipart

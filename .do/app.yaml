@@ -1,0 +1,25 @@
+name: iris-backend
+services:
+- name: api
+  source_dir: /facerec
+  github:
+    repo: tharukaGamage01/Iris
+    branch: main
+    deploy_on_push: true
+  build_command: pip install --upgrade pip && pip install -r requirements.txt
+  run_command: python -m uvicorn app.api:app --host 0.0.0.0 --port $PORT
+  environment_slug: python
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  health_check:
+    http_path: /health
+  routes:
+  - path: /
+  envs:
+  - key: SUPABASE_URL
+    value: https://aufuhhidcwyjtpafwckk.supabase.co
+  - key: SUPABASE_KEY
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1ZnVoaGlkY3d5anRwYWZ3Y2trIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTI3OTA1OCwiZXhwIjoyMDcwODU1MDU4fQ.8wJnLqjdQ_kxQNTc6uIo8eVvV_r9K3QpjOIYLM2C7Uk
+  - key: BUCKET_NAME
+    value: images

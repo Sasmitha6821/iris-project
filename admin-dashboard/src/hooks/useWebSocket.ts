@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 // WebSockets removed — provide a safe no-op hook for backward compatibility
-export const useWebSocket = (_url: string = 'http://127.0.0.1:8001') => {
+export const useWebSocket = (_url: string = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001') => {
   const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
     // Always disabled in this build

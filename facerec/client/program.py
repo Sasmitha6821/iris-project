@@ -23,7 +23,7 @@ load_dotenv()
 # =========================
 # Config (env overridable)
 # =========================
-API_BASE = os.getenv("API_BASE", "http://localhost:8001")
+API_BASE = os.getenv("API_BASE", "https://iris-project-1-6bed.onrender.com")
 IMAGES_API_URL = os.getenv("IMAGES_API_URL", f"{API_BASE}/images")
 
 IMAGES_PAGE_SIZE = int(os.getenv("IMAGES_PAGE_SIZE", "50"))
@@ -409,16 +409,41 @@ presence_unknown: Dict[str, PresenceState] = {}    # key: unknown fingerprint   
 def notify_seen_known(name: str) -> Tuple[bool, Optional[str]]:
     """Toggle attendance for a known person."""
     try:
-        sb = init_supabase()
-        stu = _get_student(sb, external_id=None, name=name)
-        if not stu:
-            print(f"[WARN] Student not found for name={name!r}")
+        # Use backend API instead of direct Supabase
+        import requests
+        api_base = os.getenv("API_BASE", "http://localhost:8001")
+        
+        # Get the proper name from the canonical name mapping
+        _load_people_cache()  # Ensure people cache is loaded
+        canonical_name = _canonical_name(name)
+        person_info = id_map_by_canonical.get(canonical_name)
+        
+        if not person_info:
+            print(f"[WARN] No person found for canonical name: {canonical_name}")
             return False, None
-        att = _toggle_attendance_for_today_direct(sb, stu["id"], datetime.now(timezone.utc))
-        status = (att.get("status") or "").lower() or None
-        return True, status
+            
+        proper_name = person_info.get("name")
+        if not proper_name:
+            print(f"[WARN] No proper name found for: {canonical_name}")
+            return False, None
+        
+        # Send to backend API using the proper name
+        response = requests.post(f"{api_base}/attendance/seen", json={
+            "name": proper_name
+        })
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Extract status from the nested attendance object
+            attendance_status = data.get('attendance', {}).get('status', 'unknown')
+            print(f"[ATTENDANCE] {proper_name} -> {attendance_status}")
+            return True, attendance_status
+        else:
+            print(f"[WARN] Backend API error for {proper_name}: {response.status_code} - {response.text}")
+            return False, None
+            
     except Exception as e:
-        print(f"[WARN] Direct DB toggle failed for known {name}: {e}")
+        print(f"[WARN] API toggle failed for known {name}: {e}")
         return False, None
 
 def notify_seen_unknown(fingerprint: str, frame_bgr: np.ndarray, box: Optional[Tuple[int,int,int,int]]) -> Tuple[bool, Optional[str]]:
@@ -558,7 +583,7 @@ def main():
                         st.first_seen_ts = 0.0  # Reset detection window
                         st.consecutive_detections = 0
                         ln.writerow([name, datetime.now().strftime(TIME_FMT), status or 'toggled'])
-                        print(f"[ATTENDANCE] {name} -> {status or 'toggled'}")
+                        # Print statement removed - notify_seen_known already prints the result
 
             # KNOWN: Reset state for people not seen this frame
             for name, st in list(presence_known.items()):
